@@ -4,16 +4,16 @@ import App from '../final/03'
 // import App from '../exercise/03'
 
 test('renders a toggle component', () => {
-  const {toggleButton, toggle, container} = renderToggle(<App />)
-  expect(toggleButton).not.toBeChecked()
+  const {toggle, getToggle, container} = renderToggle(<App />)
+  expect(getToggle()).toHaveAttribute('aria-pressed', 'false')
   expect(container.textContent).toMatch('The button is off')
   expect(container.textContent).not.toMatch('The button is on')
   toggle()
-  expect(toggleButton).toBeChecked()
+  expect(getToggle()).toHaveAttribute('aria-pressed', 'true')
   expect(container.textContent).toMatch('The button is on')
   expect(container.textContent).not.toMatch('The button is off')
   toggle()
-  expect(toggleButton).not.toBeChecked()
+  expect(getToggle()).toHaveAttribute('aria-pressed', 'false')
   expect(container.textContent).toMatch('The button is off')
   expect(container.textContent).not.toMatch('The button is on')
 })

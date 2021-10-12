@@ -1,31 +1,30 @@
-import * as React from 'react'
 import {renderToggle, screen, userEvent} from '../../test/utils'
 import App from '../final/04'
 // import App from '../exercise/04'
 
 test('renders a toggle component', () => {
-  const {toggleButton, toggle} = renderToggle(<App />)
-  expect(toggleButton).not.toBeChecked()
+  const {getToggle, toggle} = renderToggle(<App />)
+  expect(getToggle()).toHaveAttribute('aria-pressed', 'false')
   toggle()
-  expect(toggleButton).toBeChecked()
+  expect(getToggle()).toHaveAttribute('aria-pressed', 'true')
   toggle()
-  expect(toggleButton).not.toBeChecked()
+  expect(getToggle()).toHaveAttribute('aria-pressed', 'false')
 })
 
 test('can also toggle with the custom button', () => {
-  const {toggleButton} = renderToggle(<App />)
-  expect(toggleButton).not.toBeChecked()
+  const {getToggle} = renderToggle(<App />)
+  expect(getToggle()).toHaveAttribute('aria-pressed', 'false')
   userEvent.click(screen.getByLabelText('custom-button'))
-  expect(toggleButton).toBeChecked()
+  expect(getToggle()).toHaveAttribute('aria-pressed', 'true')
 })
 
 // 💯 remove the `.skip` if you're working on the extra credit
 test.skip('passes custom props to the custom-button', () => {
-  const {toggleButton} = renderToggle(<App />)
+  const {getToggle} = renderToggle(<App />)
   const customButton = screen.getByLabelText('custom-button')
   expect(customButton.getAttribute('id')).toBe('custom-button-id')
 
   userEvent.click(customButton)
 
-  expect(toggleButton).toBeChecked()
+  expect(getToggle()).toHaveAttribute('aria-pressed', 'true')
 })

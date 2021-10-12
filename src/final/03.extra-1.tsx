@@ -1,14 +1,15 @@
-// Flexible Compound Components with context
+// Compound Components
 // 💯 custom hook validation
 // http://localhost:3000/isolated/final/03.extra-1.js
 
 import * as React from 'react'
 import {Switch} from '../switch'
 
-const ToggleContext = React.createContext()
+type ToggleValue = {on: boolean; toggle: () => void}
+const ToggleContext = React.createContext<ToggleValue | undefined>(undefined)
 ToggleContext.displayName = 'ToggleContext'
 
-function Toggle({children}) {
+function Toggle({children}: {children: React.ReactNode}) {
   const [on, setOn] = React.useState(false)
   const toggle = () => setOn(!on)
 
@@ -27,19 +28,21 @@ function useToggle() {
   return context
 }
 
-function ToggleOn({children}) {
+function ToggleOn({children}: {children: React.ReactNode}) {
   const {on} = useToggle()
-  return on ? children : null
+  return <>{on ? children : null}</>
 }
 
-function ToggleOff({children}) {
+function ToggleOff({children}: {children: React.ReactNode}) {
   const {on} = useToggle()
-  return on ? null : children
+  return <>{on ? null : children}</>
 }
 
-function ToggleButton({...props}) {
+function ToggleButton({
+  ...props
+}: Omit<React.ComponentProps<typeof Switch>, 'on' | 'onClick'>) {
   const {on, toggle} = useToggle()
-  return <Switch on={on} onClick={toggle} {...props} />
+  return <Switch {...props} on={on} onClick={toggle} />
 }
 
 function App() {

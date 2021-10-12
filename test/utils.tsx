@@ -8,19 +8,21 @@ import {
 } from 'react-dom/test-utils'
 import {Switch} from '../src/switch'
 
-const findSwitchInstances = rootInstance =>
+const findSwitchInstances = (rootInstance: React.Component<any, {}, any>) =>
   findAllInRenderedTree(rootInstance, c =>
     isCompositeComponentWithType(c, Switch),
   )
 
-function validateSwitchInstance(switchInstance) {
+function validateSwitchInstance(switchInstance?: React.ReactInstance) {
   alfredTip(
     () => expect(switchInstance).toBeDefined(),
     `Unable to find the Switch component. Make sure you're rendering that!`,
   )
   alfredTip(
     () =>
-      expect(switchInstance.props).toMatchObject({
+      // TODO: fix this 🤷‍♂️
+      // @ts-expect-error not sure what type the switchInstance really is...
+      expect(switchInstance?.props).toMatchObject({
         on: expect.any(Boolean),
         onClick: expect.any(Function),
         // it can also have aria-pressed...
@@ -37,18 +39,16 @@ class Root extends React.Component {
   }
 }
 
-function renderToggle(ui) {
-  let rootInstance
-  let rootRef = instance => (rootInstance = instance)
+function renderToggle(ui: React.ReactElement) {
+  let rootInstance: Root | null = null
+  let rootRef: React.LegacyRef<Root> = instance => (rootInstance = instance)
   const utils = render(<Root ref={rootRef}>{ui}</Root>)
-  const switchInstance = findSwitchInstances(rootInstance)[0]
+  const switchInstance = findSwitchInstances(rootInstance!)[0]
   validateSwitchInstance(switchInstance)
-  const toggleButton = utils.getAllByTestId('toggle-input')[0]
 
   return {
-    toggle: () => userEvent.click(utils.getAllByTestId('toggle-input')[0]),
-    toggleButton,
-    rootInstance,
+    toggle: () => userEvent.click(utils.getByTestId('toggle-button')),
+    getToggle: () => utils.getByTestId('toggle-button'),
     ...utils,
   }
 }

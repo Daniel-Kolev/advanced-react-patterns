@@ -8,12 +8,12 @@ import * as React from 'react'
 // your `render` method or the `getTogglerProps` method
 // (if we've gotten to that part)
 
-// this is here to fill in for the onChange handler
-// we're not using onChange because it seems to behave
-// differently in codesandbox and locally :shrug:
-const noop = () => {}
-
-class Switch extends React.Component {
+// this is only a class component so we can do some implementation-detail
+// tests to make sure you're doing things as instructed :)
+class Switch extends React.Component<
+  {on: boolean} & Omit<JSX.IntrinsicElements['button'], 'ref'>,
+  {}
+> {
   render() {
     const {
       on,
@@ -30,17 +30,14 @@ class Switch extends React.Component {
       .filter(Boolean)
       .join(' ')
     return (
-      <label aria-label={ariaLabel || 'Toggle'} style={{display: 'block'}}>
-        <input
-          className="toggle-input"
-          type="checkbox"
-          checked={on}
-          onChange={noop}
-          onClick={onClick}
-          data-testid="toggle-input"
-        />
-        <span className={btnClassName} {...props} />
-      </label>
+      <button
+        aria-label={ariaLabel ?? 'Toggle'}
+        aria-pressed={on}
+        onClick={onClick}
+        className={btnClassName}
+        data-testid="toggle-button"
+        {...props}
+      />
     )
   }
 }
